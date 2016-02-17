@@ -35,6 +35,26 @@
   file: dest=/usr/local/tomcat/webapps state=directory owner={{ tomcat_user }}  group={{ tomcat_user }}  mode=0775
   when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
 
+# Creating missing symlinks
+# https://bugs.launchpad.net/ubuntu/+source/tomcat7/+bug/1232258
+- name: Create missing symlink
+  file:
+    path: /usr/share/tomcat7/shared
+    src: /var/lib/tomcat7/shared/
+    state: link
+
+- name: Create missing symlink
+  file:
+    path: /usr/share/tomcat7/server
+    src: /var/lib/tomcat7/server/
+    state: link
+
+- name: Create missing symlink
+  file:
+    path: /usr/share/tomcat7/common
+    src: /var/lib/tomcat7/common/
+    state: link
+
 # Creating Service Configuration
 - name: Configuring Tomcat Service (Ubuntu / Debian)
   template: src=tomcat7.j2 dest=/etc/default/tomcat7 owner=root group=root mode=0644
